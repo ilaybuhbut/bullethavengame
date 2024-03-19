@@ -54,5 +54,4 @@ while running:
     screen.blit(txtsurf,(380,10))
     pygame.display.flip()
 
-
 pygame.quit()
