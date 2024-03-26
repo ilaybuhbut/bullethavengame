@@ -23,16 +23,14 @@ window_width = 500
 window_height = 500
 game_display = pygame.display.set_mode((window_width, window_height))
 bg_image = pygame.image.load('grassasset(1).png')
-
+player = pygame.image.load('bettersquid.png')
 
 while running:
-
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     game_display.blit(bg_image, (0, 0))
-    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(x, y, width, height))
+    game_display.blit(player, (x,y))
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and x > 0:
         x -= vel
