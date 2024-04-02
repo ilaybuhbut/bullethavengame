@@ -11,9 +11,9 @@ pygame.display.set_caption('My')
 running = True
 x = 200
 y = 200
-width = 20
-height = 20
-vel = 1.5
+width = 50
+height = 50
+vel = 3
 fps=0
 last_time = time.time()
 black=(0,0,0)
@@ -23,9 +23,11 @@ window_width = 500
 window_height = 500
 game_display = pygame.display.set_mode((window_width, window_height))
 bg_image = pygame.image.load('grassasset(1).png')
-player = pygame.image.load('bettersquid.png')
+player = pygame.image.load('judoguy(1).png')
 
 while running:
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
