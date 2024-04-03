@@ -1,50 +1,45 @@
 import pygame
 import time
 import random
-
+from random import randrange
 
 pygame.init()
 
 screen = pygame.display.set_mode([500, 500])
-pygame.display.set_caption('My')
+pygame.display.set_caption('dodging game?')
 
 running = True
 x = 200
 y = 200
+window_width = 500
+window_height = 500
 width = 50
 height = 50
+crab_x = randrange(window_width)
+crab_y = randrange(window_height)
+crab_speed = 2
 vel = 3
 fps=0
 last_time = time.time()
 black=(0,0,0)
 font = pygame.font.SysFont("Arial", 26)
 real_fps=0
-window_width = 500
-window_height = 500
 ENEMY_SPEED = 2
 MAX_ENEMIES = 5
 
 game_display = pygame.display.set_mode((window_width, window_height))
 bg_image = pygame.image.load('grassasset(1).png')
 player = pygame.image.load('judoguy(1).png')
-enemy_crab = pygame.image.load("Crab1.png")
+crab = pygame.image.load("Crab1.png")
 
 enemies = []
-def generatePalyers():
-    global enemies
-    x = random.randint(0,1)
-    enemies.append([x,0])
+def generateEnemies(x,y):
+    game_display.blit(crab, (x,y))
 
-def moveenemies():
-    global enemies
-    for enemy in enemies:
-        enemies[]+=ENEMY_SPEED
-def showEnemies():
-    print(enemies)
-    global screen
-    for enemy in enemies:
-        screen.blit(enemy_crab, (enemy[0],enemy[1]))
-
+def moveCrab():
+    global crabs
+    for crab in crab:
+        crabs[1]+=crab_speed
 
 while running:
 
@@ -61,11 +56,17 @@ while running:
         y += vel
     if keys[pygame.K_RIGHT] and x < 500-width:
         x += vel
+
+    crab_x += crab_speed
+    crab_y += crab_speed
+
+    if crab_x >= width:
+        crab_x = randrange(window_width)
+        crab_y = randrange(window_height)
     game_display.blit(bg_image, (0, 0))
     game_display.blit(player, (x,y))
-    moveenemies()
-    generatePalyers()
-    showEnemies()
+    generateEnemies(crab_x , crab_y)
+    crab
 
 
     pygame.display.update()
