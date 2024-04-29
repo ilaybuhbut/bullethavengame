@@ -2,6 +2,7 @@ import pygame
 import time
 import random
 from random import randrange
+import subprocess
 
 pygame.init()
 
@@ -26,6 +27,10 @@ font = pygame.font.SysFont("Arial", 26)
 real_fps=0
 ENEMY_SPEED = 2
 MAX_ENEMIES = 5
+player_hitbox = pygame.Rect(0,0 , 50 , 50)
+player_hitbox.center = (x,y)
+score = 0 
+
 
 game_display = pygame.display.set_mode((window_width, window_height))
 bg_image = pygame.image.load('grassasset(1).png')
@@ -42,10 +47,8 @@ def moveCrab():
         crabs[1]+=crab_speed
 
 last_time = pygame.time.get_ticks()
-
+delta_time = time.time() - last_time
 while running:
-
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -74,17 +77,20 @@ while running:
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
 
+    if player_hitbox.collidepoint((crab_x, crab_y)):
+        subprocess.run(["msg" , "*" , "you lost lol"])
+        pygame.quit()
+
     game_display.blit(bg_image, (0, 0))
     game_display.blit(player, (x,y))
     generateEnemies(crab_x , crab_y)
 
 
     pygame.display.update()
-    if (time.time() - last_time >0.25):
-        real_fps=fps*4
-        print(fps)
-        fps=0
+    if (time.time() - last_time >= 100000000):
+        score += 1
         last_time = time.time()
+        print("Score: " + str(score))
 
 
 pygame.quit()
