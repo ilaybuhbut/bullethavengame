@@ -1,7 +1,9 @@
 import pygame
+from pygame import mixer
 import time
 import random
 from random import randrange
+import subprocess
 
 pygame.init()
 
@@ -17,7 +19,7 @@ width = 50
 height = 50
 crab_x = randrange(window_width)
 crab_y = randrange(window_height)
-crab_speed = 2
+crab_speed = 1
 vel = 3
 fps=0
 last_time = time.time()
@@ -26,11 +28,15 @@ font = pygame.font.SysFont("Arial", 26)
 real_fps=0
 ENEMY_SPEED = 2
 MAX_ENEMIES = 5
+player_hitbox = pygame.Rect(x , y , width, height)
+enemy_hitbox = pygame.Rect(crab_x, crab_y, width, height)
+score = 0
 
 game_display = pygame.display.set_mode((window_width, window_height))
 bg_image = pygame.image.load('grassasset(1).png')
 player = pygame.image.load('judoguy(1).png')
 crab = pygame.image.load("Crab1.png")
+
 
 enemies = []
 def generateEnemies(x,y):
@@ -40,7 +46,10 @@ def moveCrab():
     global crabs
     for crab in crab:
         crabs[1]+=crab_speed
-
+mixer.music.load("Janji - Heroes Tonight (feat. Johnning) Progressive House NCS - Copyright Free Music.mp3")
+mixer.music.play()
+last_time = pygame.time.get_ticks()
+delta_time = time.time() - last_time
 while running:
 
 
@@ -57,28 +66,30 @@ while running:
     if keys[pygame.K_RIGHT] and x < 500-width:
         x += vel
 
-    crab_x += crab_speed
-    crab_y += crab_speed
-
-    if crab_x >= width:
+    delta_time = pygame.time.get_ticks() - last_time
+    last_time = pygame.time.get_ticks()
+    
+    if crab_x < window_width / 2:
+        crab_x += crab_speed
+    elif crab_x > window_width / 2:
+        crab_x -= crab_speed
+    if crab_y< window_height / 2:
+        crab_y+= crab_speed
+    elif crab_y> window_height / 2:
+        crab_y-= crab_speed
+    if (crab_x , crab_y) == (window_width / 2, window_height / 2):
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
+
     game_display.blit(bg_image, (0, 0))
     game_display.blit(player, (x,y))
     generateEnemies(crab_x , crab_y)
-    crab
 
 
+    score+=1
+    txtsurf = font.render("score:"+str(score), True, (255,0,0))
+    game_display.blit(txtsurf,(380,10))
     pygame.display.update()
-    if (time.time() - last_time >0.25):
-        real_fps=fps*4
-        print(fps)
-        fps=0
-        last_time = time.time()
 
-    fps+=1
-    txtsurf = font.render("FPS:"+str(real_fps), True, black)
-    screen.blit(txtsurf,(380,10))
-    pygame.display.flip()
 
 pygame.quit()
