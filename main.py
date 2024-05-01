@@ -81,11 +81,11 @@ while running:
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
 
-    player_hitbox = pygame.Rect(0, 0, 50 , 50)
+    player_hitbox = pygame.Rect(0, 0, x , y)
     enemy_hitbox = pygame.Rect(crab_x, crab_y, width, height)
 
     if player_hitbox.colliderect(enemy_hitbox):
-        subprocess.run(["msg" , "*" , "you lost lol"])
+        subprocess.run(["msg" , "*" , "you lost"])
         pygame.quit()
     
     game_display.blit(bg_image, (0, 0))
