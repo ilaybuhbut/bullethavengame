@@ -28,8 +28,6 @@ font = pygame.font.SysFont("Arial", 26)
 real_fps=0
 ENEMY_SPEED = 2
 MAX_ENEMIES = 5
-player_hitbox = pygame.Rect(x , y , width, height)
-enemy_hitbox = pygame.Rect(crab_x, crab_y, width, height)
 score = 0
 
 game_display = pygame.display.set_mode((window_width, window_height))
@@ -47,7 +45,7 @@ def moveCrab():
     for crab in crab:
         crabs[1]+=crab_speed
 mixer.music.load("Janji - Heroes Tonight (feat. Johnning) Progressive House NCS - Copyright Free Music.mp3")
-mixer.music.play()
+mixer.music.play
 last_time = pygame.time.get_ticks()
 delta_time = time.time() - last_time
 while running:
@@ -81,6 +79,13 @@ while running:
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
 
+    player_hitbox = pygame.Rect(50, 50, width,height)
+    enemy_hitbox = (crab_x,crab_y, width, height)
+
+    if player_hitbox.collidepoint((crab_x, crab_y)):
+        subprocess.run(["msg" , "*" , "you lost lol"])
+        pygame.quit()
+    
     game_display.blit(bg_image, (0, 0))
     game_display.blit(player, (x,y))
     generateEnemies(crab_x , crab_y)
