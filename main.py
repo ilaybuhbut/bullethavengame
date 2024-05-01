@@ -4,9 +4,7 @@ import time
 import random
 from random import randrange
 import subprocess
-
 pygame.init()
-
 screen = pygame.display.set_mode([500, 500])
 pygame.display.set_caption('dodging game?')
 
@@ -45,7 +43,7 @@ def moveCrab():
     for crab in crab:
         crabs[1]+=crab_speed
 mixer.music.load("Janji - Heroes Tonight (feat. Johnning) Progressive House NCS - Copyright Free Music.mp3")
-mixer.music.play
+mixer.music.play()
 last_time = pygame.time.get_ticks()
 delta_time = time.time() - last_time
 while running:
@@ -63,7 +61,11 @@ while running:
         y += vel
     if keys[pygame.K_RIGHT] and x < 500-width:
         x += vel
-
+    if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
+        vel += 2
+    
+        
+          
     delta_time = pygame.time.get_ticks() - last_time
     last_time = pygame.time.get_ticks()
     
@@ -79,10 +81,10 @@ while running:
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
 
-    player_hitbox = pygame.Rect(50, 50, width,height)
-    enemy_hitbox = (crab_x,crab_y, width, height)
+    player_hitbox = pygame.Rect(0, 0, 50 , 50)
+    enemy_hitbox = pygame.Rect(crab_x, crab_y, width, height)
 
-    if player_hitbox.collidepoint((crab_x, crab_y)):
+    if player_hitbox.colliderect(enemy_hitbox):
         subprocess.run(["msg" , "*" , "you lost lol"])
         pygame.quit()
     
