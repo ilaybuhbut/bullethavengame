@@ -32,9 +32,9 @@ player_hitbox.center = (x,y)
 score = 0 
 
 game_display = pygame.display.set_mode((window_width, window_height))
-bg_image = pygame.image.load('bullethavengame\grassasset(1).png')
-player = pygame.image.load('bullethavengame\judoguy(1).png')
-crab = pygame.image.load("bullethavengame\Crab1.png")
+bg_image = pygame.image.load('bullethavengame\\grassasset(1).png')
+player = pygame.image.load('bullethavengame\\judoguy(1).png')
+crab = pygame.image.load("bullethavengame\\Crab1.png")
 
 enemies = []
 def generateEnemies(x,y):
@@ -87,10 +87,10 @@ while running:
     generateEnemies(crab_x , crab_y)
 
 
-    fps+=1
-    txtsurf = font.render("FPS:"+str(real_fps), True, green)
-    window.blit(txtsurf,(380,10))
-    pygame.display.flip()
+    if (time.time() - last_time >= 100000000):
+        score += 1
+    txtsurf = font.render("score:"+str(score), True, (255,9,0))
+    game_display.blit(txtsurf,(380,10))
 
-
+    pygame.display.update()
 pygame.quit()
