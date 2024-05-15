@@ -38,6 +38,17 @@ enemies = []
 def generateEnemies(x,y):
     game_display.blit(crab, (x,y))
 
+def highscore():
+    with open("highscore.txt", "w+") as scorefile:
+        highscore = scorefile.read()
+        
+        if len(highscore) > 0:
+            highscore = int(highscore)
+            if highscore < score:
+                scorefile.write(str(score))
+        else:
+            scorefile.write(str(score))
+
 def moveCrab():
     global crabs
     for crab in crab:
@@ -82,10 +93,11 @@ while running:
         crab_y = randrange(window_height)
 
     player_hitbox = pygame.Rect(0, 0, x , y)
-    enemy_hitbox = pygame.Rect(crab_x, crab_y, width, height)
+    enemy_hitbox = pygame.Rect(crab_x, crab_y, 100, 100)
 
     if player_hitbox.colliderect(enemy_hitbox):
         subprocess.run(["msg" , "*" , "you lost"])
+        highscore()
         pygame.quit()
     
     game_display.blit(bg_image, (0, 0))
