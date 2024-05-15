@@ -19,7 +19,7 @@ height = 50
 crab_x = randrange(window_width)
 crab_y = randrange(window_height)
 crab_speed = 0.5
-vel = 1
+vel = 1.5
 last_time = time.time()
 black=(0,0,0)
 font = pygame.font.SysFont("Arial", 26)
@@ -29,15 +29,22 @@ MAX_ENEMIES = 5
 score = 0
 
 game_display = pygame.display.set_mode((window_width, window_height))
-bg_image = pygame.image.load('bullethavengame\\grassasset(1).png')
-player = pygame.image.load('bullethavengame\\judoguy(1).png')
-crab = pygame.image.load("bullethavengame\\Crab1.png")
-
+screen_gameover = pygame.display.set_mode([500, 500])
+bg_image = pygame.image.load('grassasset(1).png')
+player = pygame.image.load('judoguy(1).png')
+crab = pygame.image.load("Crab1.png")
+game_over_image = pygame.image.load('youdied.png')
+game_over_image = pygame.transform.scale(game_over_image, (500, 500))
 
 crabs = []
 
 def generateEnemies(x,y):
     game_display.blit(crab, (x,y))
+
+def moveCrab():
+    global crabs
+    for crab in crabs:
+        crabs[1] += crab_speed
 
 def highscore():
     with open("highscore.txt", "w+") as scorefile:
@@ -50,25 +57,28 @@ def highscore():
         else:
             scorefile.write(str(score))
 
-def moveCrab():
-    global crabs
-    for crab in crabs:
-        crabs[1] += crab_speed
-
 mixer.music.load("Metro Boomin - BBL Drizzy (Lyrics) Drake Diss.mp3")
 
 mixer.music.play(-1)
 
 woosh = pygame.mixer.Sound("Whoosh Sounds Effects HD (No Copyright).mp3")
 
+death = pygame.mixer.Sound("deathsound.mp3")
+
+zawardo = pygame.mixer.Sound("ZAWARDOwordess.mp3")
+
 last_time = pygame.time.get_ticks()
 delta_time = time.time() - last_time
+
+clock = pygame.time.Clock()
+
 while running:
 
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and x > 0:
         x -= vel
@@ -78,17 +88,16 @@ while running:
         y += vel
     if keys[pygame.K_RIGHT] and x < 500-width:
         x += vel
-    if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
+    if keys[pygame.K_SPACE]:
         vel += 2
-        woosh.play()
+        time.sleep(0.2)
+        zawardo.play()
         vel -= 2
-
-
     
         
-          
-    delta_time = pygame.time.get_ticks() - last_time
-    last_time = pygame.time.get_ticks()
+
+ 
+    
 
 #**************************************************************************
 #movemnt
@@ -105,24 +114,28 @@ while running:
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
 #**************************************************************************
-
-    player_hitbox = pygame.Rect(0, 0, x , y)
-    enemy_hitbox = pygame.Rect(crab_x, crab_y, 100, 100)
-
-    if player_hitbox.colliderect(enemy_hitbox):
-        subprocess.run(["msg" , "*" , "you lost"])
-        highscore()
-        pygame.quit()
-    
     game_display.blit(bg_image, (0, 0))
     game_display.blit(player, (x,y))
     generateEnemies(crab_x , crab_y)
+
+    player_hitbox = Rect(x, y, 50, 50)
+    enemy_hitbox = Rect(crab_x, crab_y, 20, 20)
+
+    if pygame.Rect.colliderect(enemy_hitbox , player_hitbox):
+        pygame.display.flip()
+        clock.tick(60)
+        bg_image = pygame.image.load('youdied.png')
+
+        game_display.blit(bg_image, (0, 0))
+
+        pygame.time.wait(1000)
+
+        pygame.quit()
+    
 
 
     score+=1
     txtsurf = font.render("score:"+str(score), True, (255,0,0))
     game_display.blit(txtsurf,(380,10))
+    highscore()
     pygame.display.update()
-
-
-pygame.quit()
