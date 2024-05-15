@@ -4,22 +4,22 @@ import time
 import random
 from random import randrange
 import subprocess
+from pygame import Rect
 pygame.init()
 screen = pygame.display.set_mode([500, 500])
 pygame.display.set_caption('dodging game?')
 
 running = True
-x = 200
-y = 200
+x = 250
+y = 250
 window_width = 500
 window_height = 500
 width = 50
 height = 50
 crab_x = randrange(window_width)
 crab_y = randrange(window_height)
-crab_speed = 1
-vel = 3
-fps=0
+crab_speed = 0.5
+vel = 1
 last_time = time.time()
 black=(0,0,0)
 font = pygame.font.SysFont("Arial", 26)
@@ -29,12 +29,13 @@ MAX_ENEMIES = 5
 score = 0
 
 game_display = pygame.display.set_mode((window_width, window_height))
-bg_image = pygame.image.load('grassasset(1).png')
-player = pygame.image.load('judoguy(1).png')
-crab = pygame.image.load("Crab1.png")
+bg_image = pygame.image.load('bullethavengame\\grassasset(1).png')
+player = pygame.image.load('bullethavengame\\judoguy(1).png')
+crab = pygame.image.load("bullethavengame\\Crab1.png")
 
 
-enemies = []
+crabs = []
+
 def generateEnemies(x,y):
     game_display.blit(crab, (x,y))
 
@@ -51,10 +52,15 @@ def highscore():
 
 def moveCrab():
     global crabs
-    for crab in crab:
-        crabs[1]+=crab_speed
-mixer.music.load("Janji - Heroes Tonight (feat. Johnning) Progressive House NCS - Copyright Free Music.mp3")
-mixer.music.play()
+    for crab in crabs:
+        crabs[1] += crab_speed
+
+mixer.music.load("Metro Boomin - BBL Drizzy (Lyrics) Drake Diss.mp3")
+
+mixer.music.play(-1)
+
+woosh = pygame.mixer.Sound("Whoosh Sounds Effects HD (No Copyright).mp3")
+
 last_time = pygame.time.get_ticks()
 delta_time = time.time() - last_time
 while running:
@@ -74,12 +80,18 @@ while running:
         x += vel
     if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
         vel += 2
+        woosh.play()
+        vel -= 2
+
+
     
         
           
     delta_time = pygame.time.get_ticks() - last_time
     last_time = pygame.time.get_ticks()
-    
+
+#**************************************************************************
+#movemnt
     if crab_x < window_width / 2:
         crab_x += crab_speed
     elif crab_x > window_width / 2:
@@ -87,10 +99,12 @@ while running:
     if crab_y< window_height / 2:
         crab_y+= crab_speed
     elif crab_y> window_height / 2:
-        crab_y-= crab_speed
+        crab_y -= crab_speed
+    #
     if (crab_x , crab_y) == (window_width / 2, window_height / 2):
         crab_x = randrange(window_width)
         crab_y = randrange(window_height)
+#**************************************************************************
 
     player_hitbox = pygame.Rect(0, 0, x , y)
     enemy_hitbox = pygame.Rect(crab_x, crab_y, 100, 100)
