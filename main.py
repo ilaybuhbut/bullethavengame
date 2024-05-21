@@ -6,9 +6,11 @@ from random import randrange
 pygame.init()
 from pygame import Rect
 
+#screen dimentions
 screen = pygame.display.set_mode([500, 500])
 pygame.display.set_caption('dodging game?')
 
+#game variables
 running = True
 x = 250
 y = 250
@@ -42,6 +44,7 @@ def moveCrab():
     for crab in crabs:
         crabs[1] += crab_speed
 
+#loads highscore
 def load_highscore():
     try:
         with open("highscore.txt", "r") as scorefile:
@@ -52,13 +55,25 @@ def load_highscore():
         pass
     return 0
 
+#saves highscore
 def save_highscore(new_score):
     with open("highscore.txt", "w") as scorefile:
         scorefile.write(str(new_score))
+    
+#the things that happen when its game over
+def game_over():
+        game_display.blit(game_over_image, (0, 0))
+        pygame.display.flip()
+        death.play()
+        pygame.time.wait(1000)
+        if score > high_score:
+            save_highscore(score)
+        pygame.quit()
+        running = False
 
+#all game sounds and music
 mixer.music.load("Metro Boomin - BBL Drizzy (Lyrics) Drake Diss.mp3")
 mixer.music.play(-1)
-
 woosh = pygame.mixer.Sound("Whoosh Sounds Effects HD (No Copyright).mp3")
 death = pygame.mixer.Sound("deathsound.mp3")
 zawardo = pygame.mixer.Sound("ZAWARDOwordess.mp3")
@@ -67,6 +82,7 @@ clock = pygame.time.Clock()
 
 high_score = load_highscore()
 
+#main game loop
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -87,7 +103,7 @@ while running:
         zawardo.play()
         vel -= 2
 
-    # Movement logic
+    # Movement
     if crab_x < window_width / 2:
         crab_x += crab_speed
     elif crab_x > window_width / 2:
@@ -104,18 +120,12 @@ while running:
     game_display.blit(player, (x, y))
     generateEnemies(crab_x, crab_y)
 
+    #hitboxes
     player_hitbox = Rect(x, y, 50, 50)
     enemy_hitbox = Rect(crab_x, crab_y, 20, 20)
 
     if pygame.Rect.colliderect(enemy_hitbox, player_hitbox):
-        game_display.blit(game_over_image, (0, 0))
-        pygame.display.flip()
-        death.play()
-        pygame.time.wait(1000)
-        if score > high_score:
-            save_highscore(score)
-        pygame.quit()
-        running = False
+        game_over()
 
     score += 1
     txtsurf = font.render("score: " + str(score), True, (255, 0, 0))
